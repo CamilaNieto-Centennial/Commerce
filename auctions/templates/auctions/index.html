@@ -1,7 +1,29 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    {% if user.is_authenticated %}
+        <h2>Active Listings</h2>
 
-    TODO
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for auction in auctions %}
+                <div class="col">
+                    <div class="card h-100" id="product-grid">
+                        <img src="{{ auction.photo }}" class="card-img-top gridImages" alt="{{ auction.title }}">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ auction.title }}</h4>
+                            <h5 class="card-price">$ {{ auction.price }}</h5>
+                            <p class="card-text">{{ auction.description }}</p>
+                            <a class="btn btn-primary" href="https://www.google.com/" role="button">VIEW ITEM</a>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Created at {{auction.dateCreated}}</small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h2>Active Listings</h2>
+        <p>Please sign in to be able to check this page.</p>
+    {% endif %}
 {% endblock %}

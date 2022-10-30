@@ -1,3 +1,49 @@
 body {
     padding: 10px;
 }
+
+/*img {
+    max-width: 100%;
+    display: block;
+}*/
+
+/* Images inside Grids */
+.gridImages {
+    object-fit: contain;
+    aspect-ratio: 1.5 / 1;
+}
+
+
+/*--- MEDIA QUERIES --*/
+
+@media (max-width: 1200px) {
+    /* Images inside Grids */
+    .gridImages {
+        aspect-ratio: 1 / 1;
+    }
+        
+
+}
+
+
+@media (max-width: 992px) {
+    
+       
+
+
+}
+
+
+@media (max-width: 768px) {
+    /* Images inside Grids */
+    .gridImages {
+        aspect-ratio: 2 / 1;
+    }
+
+}
+
+
+@media (max-width: 576px) {
+    /**/
+
+}
