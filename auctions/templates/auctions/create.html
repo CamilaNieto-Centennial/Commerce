@@ -1,0 +1,43 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% if user.is_authenticated %}
+<h2>Create Listing</h2>
+<form class="row g-3" action="{% url 'create' %}" method="POST">
+    {% csrf_token %}
+    <div class="col-md-12">
+        <label for="title" class="form-label">Title:</label>
+        <input type="text" class="form-control" id="title" name="title">
+    </div>
+    <div class="col-md-12">
+        <label for="description" class="form-label">Description:</label>
+        <input type="text" class="form-control" id="description" name="description">
+    </div>
+    <div class="col-6">
+        <label for="photo" class="form-label">Photo link:</label>
+        <input type="text" class="form-control" id="photo" name="photo" placeholder="URL">
+    </div>
+    <div class="col-6">
+        <label for="price" class="form-label">Price</label>
+        <input type="number" class="form-control" id="price" name="price" step="0.01" placeholder="$">
+    </div>
+    <div class="col-md-4">
+        <label for="category" class="form-label">Category:</label>
+        <select id="category" class="form-select" name="category">
+            <option selected disabled hidden>Select a category</option>
+            {% for category in categories %}
+            <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">CREATE</button>
+    </div>
+</form>
+
+
+{% else %}
+<h2>Create Listing</h2>
+<p>Please sign in to be able to check this page.</p>
+{% endif %}
+{% endblock %}

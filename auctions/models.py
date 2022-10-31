@@ -22,7 +22,7 @@ class AuctionListing(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="user")
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=600)
-    price = models.IntegerField()
+    price = models.FloatField()
     photo = models.URLField(max_length=500)
     isActive = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, related_name="category")

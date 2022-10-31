@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import User, AuctionListing
+from .models import User, AuctionListing, Category
 
 
 # Active Listings Page
@@ -65,3 +65,34 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+# Create a new Listing Page
+def createListing (request):
+    # GET request method
+    if request.method == "GET":
+        return render(request, "auctions/create.html", {
+            "categories": Category.objects.all()
+        })
+
+    # POST request method
+    else:
+        # Get data from form
+        titleField = request.POST["title"]
+        descriptionField = request.POST["description"]
+        photoField = request.POST["photo"]
+        priceField = request.POST["price"]
+        categoryField = request.POST["category"] # *
+
+        # Check who is the user
+        user = request.user
+
+        # Get info about that specific category *
+        categoryInfo = Category.objects.get(categoryTitle=categoryField)
+
+        # Add data to the database
+        createdListing = AuctionListing.objects.create(author=user, title=titleField, description=descriptionField, photo=photoField, price=float(priceField), category=categoryInfo)
+
+        # Save data to the database
+        createdListing.save()
+
+        return HttpResponseRedirect(reverse("index"))
