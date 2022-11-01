@@ -11,7 +11,8 @@ from .models import User, AuctionListing, Category
 # Active Listings Page
 def index(request):
     return render(request, "auctions/index.html", {
-        "auctions": AuctionListing.objects.all()
+        "auctions": AuctionListing.objects.filter(isActive=True),
+        "categories": Category.objects.all()
     })
 
 
@@ -96,3 +97,19 @@ def createListing (request):
         createdListing.save()
 
         return HttpResponseRedirect(reverse("index"))
+
+def watchlist(request):
+    # GET request method
+    if request.method == "GET":
+        return render(request, "auctions/watchlist.html")
+
+def categorySearch(request):
+    # POST request method
+    if request.method == "POST":
+        chosenCategory = request.POST["category"]
+        categoryInfo = Category.objects.get(categoryTitle=chosenCategory)
+        
+        return render(request, "auctions/index.html", {
+            "auctions": AuctionListing.objects.filter(isActive=True, category=categoryInfo),
+            "categories": Category.objects.all()
+        })

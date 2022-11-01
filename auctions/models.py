@@ -30,3 +30,6 @@ class AuctionListing(models.Model):
 
     def __str__(self):
         return f"{self.id}: {self.title} by {self.author}"
+
+# Watchlist
+#class Watchlist(models.Model):

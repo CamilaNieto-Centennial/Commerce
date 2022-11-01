@@ -3,6 +3,22 @@
 {% block body %}
     {% if user.is_authenticated %}
         <h2>Active Listings</h2>
+        
+<form class="row g-3" action="{% url 'categorySearch' %}" method="POST">
+    {% csrf_token %}
+    <div class="col-md-4" style="margin-bottom: 2em;">
+        <select id="category" class="form-select" name="category">
+            <option selected disabled hidden>Select a category</option>
+            {% for category in categories %}
+            <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-8">
+        <button type="submit" class="btn btn-primary">SEARCH</button>
+    </div>
+</form>
+
 
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for auction in auctions %}
@@ -14,6 +30,12 @@
                             <h5 class="card-price">$ {{ auction.price }}</h5>
                             <p class="card-text">{{ auction.description }}</p>
                             <a class="btn btn-primary" href="https://www.google.com/" role="button">VIEW ITEM</a>
+                            <a role="button" class="btn btn-outline-danger" href="{% url 'watchlist' %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"></path>
+                                </svg>
+                                <span class="visually-hidden">Button</span>
+                            </a>
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">Created at {{auction.dateCreated}}</small>

@@ -1,0 +1,13 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% if user.is_authenticated %}
+<h2>Your Watchlist</h2>
+<p>Welcome!</p>
+
+
+{% else %}
+<h2>Create Listing</h2>
+<p>Please sign in to be able to check this page.</p>
+{% endif %}
+{% endblock %}
