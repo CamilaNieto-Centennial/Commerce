@@ -3,11 +3,13 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 
+#from auctions.views import watchlist
+
 
 class User(AbstractUser):
 
     def __str__(self):
-        return f"STAFF({self.is_staff}): {self.username}" #joined at {self.date_joined}"
+        return f"{self.username}" #joined at {self.date_joined}"
 
 # Category Listings Model
 class Category(models.Model):
@@ -25,6 +27,7 @@ class AuctionListing(models.Model):
     price = models.FloatField()
     photo = models.URLField(max_length=500)
     isActive = models.BooleanField(default=True)
+    watchlist = models.ManyToManyField(User, blank=True, null=True, related_name="watchlist")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, related_name="category")
     dateCreated = models.DateTimeField(default=timezone.now, blank=True)
 

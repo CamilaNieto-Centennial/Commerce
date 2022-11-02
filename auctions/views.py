@@ -98,11 +98,62 @@ def createListing (request):
 
         return HttpResponseRedirect(reverse("index"))
 
-def watchlist(request):
-    # GET request method
-    if request.method == "GET":
-        return render(request, "auctions/watchlist.html")
+# Specific Listing Page
+def listingPage(request, id):
+    listingPage = AuctionListing.objects.get(pk=id)
 
+    # Check who is the user
+    user = request.user
+
+    # Check if user makes part of the 'watchlist' row
+    isWatchList = user in listingPage.watchlist.all()
+
+    return render(request, "auctions/listing.html", {
+        "listingPage": listingPage,
+        "isWatchList": isWatchList
+    })
+
+
+# Remove Watchlist (from Listing Page)
+def removeWatchlist(request, id):
+    auctionListing = AuctionListing.objects.get(pk=id)
+
+    # Check who is the user
+    user = request.user
+
+    # Add data to the database (into watchlist row)
+    auctionListing.watchlist.remove(user)
+
+    return HttpResponseRedirect(reverse("listingPage", args=(id, )))
+
+
+# Add Watchlist (from Listing Page)
+def addWatchlist(request, id):
+    auctionListing = AuctionListing.objects.get(pk=id)
+
+    # Check who is the user
+    user = request.user
+
+    # Add data to the database (into watchlist row)
+    auctionListing.watchlist.add(user)
+    
+    return HttpResponseRedirect(reverse("listingPage", args=(id, )))
+
+
+# Watchlist Page
+def watchlist(request):
+    # Check who is the user
+    user = request.user
+
+    # Get listings added to 'watchlist' row for that specific user
+    auctionListings = user.watchlist.all()
+
+    return render(request, "auctions/watchlist.html", {
+        "auctions": auctionListings
+    })
+
+
+# Category Feature (Inside of Index Page)
 def categorySearch(request):
     # POST request method
     if request.method == "POST":

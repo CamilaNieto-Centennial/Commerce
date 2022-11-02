@@ -13,6 +13,20 @@ body {
     aspect-ratio: 1.5 / 1;
 }
 
+#heartForm {
+    display: inline;
+    width: 50px;
+}
+
+.listingImages {
+    display: block;
+    height: auto;
+    padding: 1em 3em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 24%;
+}
+
 
 /*--- MEDIA QUERIES --*/
 
@@ -21,13 +35,19 @@ body {
     .gridImages {
         aspect-ratio: 1 / 1;
     }
+
+    .listingImages {
+        width: 34%;
+    }
         
 
 }
 
 
 @media (max-width: 992px) {
-    
+    .listingImages {
+        width: 40%;
+    }
        
 
 
@@ -35,6 +55,10 @@ body {
 
 
 @media (max-width: 768px) {
+    .listingImages {
+        width: 50%;
+    }
+
     /* Images inside Grids */
     .gridImages {
         aspect-ratio: 2 / 1;
@@ -45,5 +69,7 @@ body {
 
 @media (max-width: 576px) {
     /**/
-
+    .listingImages {
+        width: 65%;
+    }
 }

@@ -1,0 +1,63 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+        <h2>{{listingPage.title}}</h2>
+        <div class="row align-items-center" style="text-align: center; margin-top: 1em;">
+            <div class="col">
+            {% if isWatchList %}
+                <form action="{% url 'removeWatchlist' id=listingPage.id %}" method="POST" id="heartForm">
+                    {% csrf_token %}
+                    <button id="watchlist" type="submit" name="watchlist" value="Submit" class="btn btn-outline-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"></path>
+                        </svg>
+                        <span class="visually-hidden">HeartButton</span>
+                        <strong>REMOVE</strong>
+                    </button>
+                </form>
+            {% else %}
+                <form action="{% url 'addWatchlist' id=listingPage.id %}" method="POST" id="heartForm">
+                    {% csrf_token %}
+                    <button id="watchlist" type="submit" name="watchlist" value="Submit" class="btn btn-outline-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"></path>
+                        </svg>
+                        <span class="visually-hidden">HeartButton</span>
+                        <strong>ADD</strong>
+                    </button>
+                </form>
+            {% endif %}
+            </div>
+        </div>
+        <img src="{{ listingPage.photo }}" class="card-img-top listingImages" alt="{{ listingPage.title }}">
+        <h3>${{listingPage.price}}</h3>
+        <p>{{listingPage.description}}</p>
+        
+
+    <!--<form class="row g-3" action="{% url 'categorySearch' %}" method="POST">
+        {% csrf_token %}
+        <div class="col-md-4" style="margin-bottom: 2em;">
+            <select id="category" class="form-select" name="category">
+                <option selected disabled hidden>Select a category</option>
+                {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-8">
+            <button type="submit" class="btn btn-primary">SEARCH</button>
+        </div>
+    </form>--> 
+
+    <h3>Details</h3>
+    <ul>
+        <li><strong>Owner: </strong>{{listingPage.author}}</li>
+        <li><strong>Category: </strong>{{listingPage.category}}</li>
+    </ul>
+
+    {% else %}
+        <h2>{{listingPage.title}}</h2>
+        <p>Please sign in to be able to check this page.</p>
+    {% endif %}
+{% endblock %}
