@@ -35,26 +35,51 @@
         <p>{{listingPage.description}}</p>
         
 
-    <!--<form class="row g-3" action="{% url 'categorySearch' %}" method="POST">
-        {% csrf_token %}
-        <div class="col-md-4" style="margin-bottom: 2em;">
-            <select id="category" class="form-select" name="category">
-                <option selected disabled hidden>Select a category</option>
-                {% for category in categories %}
-                <option value="{{ category }}">{{ category }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-8">
-            <button type="submit" class="btn btn-primary">SEARCH</button>
-        </div>
-    </form>--> 
+        <!--<form class="row g-3" action="{% url 'categorySearch' %}" method="POST">
+            {% csrf_token %}
+            <div class="col-md-4" style="margin-bottom: 2em;">
+                <select id="category" class="form-select" name="category">
+                    <option selected disabled hidden>Select a category</option>
+                    {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-8">
+                <button type="submit" class="btn btn-primary">SEARCH</button>
+            </div>
+        </form>--> 
 
-    <h3>Details</h3>
-    <ul>
-        <li><strong>Owner: </strong>{{listingPage.author}}</li>
-        <li><strong>Category: </strong>{{listingPage.category}}</li>
-    </ul>
+        <h3>Details</h3>
+        <ul>
+            <li><strong>Owner: </strong>{{listingPage.author}}</li>
+            <li><strong>Category: </strong>{{listingPage.category}}</li>
+        </ul>
+
+        <h3>Comments</h3>
+        {% if comments %}
+            {% for comment in comments %}
+                <div class="alert alert-dark" role="alert">
+                    <h5><strong>{{comment.author}}</strong></h5>
+                    <p>{{comment.content}}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No comments yet! Be the first one to leave one.</p>
+        {% endif %}
+
+        <form class="row" action="{% url 'listingPage' id=listingPage.id %}" method="POST">
+            {% csrf_token %}
+            <div class="col-12" style="margin-bottom: .8em;">
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="comments" name="comments" style="height: 110px"></textarea>
+                    <label for="comments">Comments</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">PUBLISH</button>
+            </div>
+        </form>
 
     {% else %}
         <h2>{{listingPage.title}}</h2>

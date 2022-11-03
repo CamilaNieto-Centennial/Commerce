@@ -34,5 +34,12 @@ class AuctionListing(models.Model):
     def __str__(self):
         return f"{self.id}: {self.title} by {self.author}"
 
-# Watchlist
-#class Watchlist(models.Model):
+# Comments
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="userName")
+    content = models.CharField(max_length=1000)
+    product = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, null=True, related_name="product")
+    dateCreated = models.DateTimeField(default=timezone.now, blank=True)
+
+    def __str__(self):
+        return f"{self.author}: {self.content} - {self.product}"

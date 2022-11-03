@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import User, AuctionListing, Category
+from .models import User, AuctionListing, Category, Comment
 
 
 # Active Listings Page
@@ -100,18 +100,39 @@ def createListing (request):
 
 # Specific Listing Page
 def listingPage(request, id):
-    listingPage = AuctionListing.objects.get(pk=id)
+    # GET request method
+    if request.method == "GET":
+        listingPage = AuctionListing.objects.get(pk=id)
+        comments = Comment.objects.filter(pk=id)
+        # Comment.objects.all()
 
-    # Check who is the user
-    user = request.user
+        # Check who is the user
+        user = request.user
 
-    # Check if user makes part of the 'watchlist' row
-    isWatchList = user in listingPage.watchlist.all()
+        # Check if user makes part of the 'watchlist' row
+        isWatchList = user in listingPage.watchlist.all()
 
-    return render(request, "auctions/listing.html", {
-        "listingPage": listingPage,
-        "isWatchList": isWatchList
-    })
+        return render(request, "auctions/listing.html", {
+            "listingPage": listingPage,
+            "isWatchList": isWatchList,
+            "comments": comments
+        })
+    else:
+        listingPage = AuctionListing.objects.get(pk=id)
+        commentsField = request.POST["comments"]
+
+        # Check who is the user
+        user = request.user
+
+        # Add data to the database
+        createdComment = Comment.objects.create(author=user, content=commentsField, product=listingPage)
+
+        # Save data to the database
+        createdComment.save()
+
+        return HttpResponseRedirect(reverse("listingPage", args=(id, )))
+
+    
 
 
 # Remove Watchlist (from Listing Page)
@@ -164,3 +185,18 @@ def categorySearch(request):
             "auctions": AuctionListing.objects.filter(isActive=True, category=categoryInfo),
             "categories": Category.objects.all()
         })
+
+# Comments Feature (Inside of Listing Page)
+def comments(request, id):
+    return
+    #comments = Comment.objects.get(pk=id)
+
+    # Check who is the user
+    #user = request.user
+
+    #commentsField = request.POST["comments"]
+
+    # Add data to the database (into watchlist row)
+    #comments.author.add(user)
+    
+    #return HttpResponseRedirect(reverse("listingPage", args=(id, )))
