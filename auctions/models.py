@@ -18,13 +18,22 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.categoryTitle}" #joined at {self.date_joined}"
 
+# Bids
+class Bid(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="usernameBid")
+    bid = models.FloatField()
+    #product = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, null=True, related_name="product")
+    dateCreated = models.DateTimeField(default=timezone.now, blank=True)
+
+    def __str__(self):
+        return f"{self.bid}" #- {self.product}
 
 # Auction Listings Model
 class AuctionListing(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="user")
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=600)
-    price = models.FloatField()
+    price = models.ForeignKey(Bid, on_delete=models.CASCADE, null=True, related_name="priceBid")
     photo = models.URLField(max_length=500)
     isActive = models.BooleanField(default=True)
     watchlist = models.ManyToManyField(User, blank=True, null=True, related_name="watchlist")

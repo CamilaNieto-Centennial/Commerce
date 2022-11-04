@@ -3,7 +3,45 @@
 {% block body %}
     {% if user.is_authenticated %}
         <h2>{{listingPage.title}}</h2>
+        {% if isAuthor %}
+            {% if message2 %}
+                {% if update2 %}
+                    <div class="alert alert-success" role="alert">
+                        {{message2}}
+                    </div>
+                {% else %}
+                    <div class="alert alert-danger" role="alert">
+                        Auction was NOT closed!
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {% if not listingPage.isActive and user == listingPage.price.author %}
+            <div class="alert alert-success" role="alert">
+                You won the Auction!
+            </div>
+        {% endif %}
+
         <div class="row align-items-center" style="text-align: center; margin-top: 1em;">
+            <div class="col">
+                {% if isAuthor and listingPage.isActive %}
+                <form action="{% url 'closeAuction' id=listingPage.id %}" method="POST" id="heartForm">
+                    {% csrf_token %}
+                    <button id="closeAuction" type="submit" name="closeAuction" value="Submit" class="btn btn-outline-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                        </svg>
+                        <span class="visually-hidden">CloseButton</span>
+                        <strong>CLOSE AUCTION</strong>
+                    </button>
+                </form>
+                {% elif listingPage.isActive %}
+                <h4><span class="badge text-bg-success">Active Auction</span></h4>
+                {% else %}
+                <h4><span class="badge text-bg-danger">Closed Auction</span></h4>
+                {% endif %}
+            </div>
             <div class="col">
             {% if isWatchList %}
                 <form action="{% url 'removeWatchlist' id=listingPage.id %}" method="POST" id="heartForm">
@@ -33,22 +71,8 @@
         <img src="{{ listingPage.photo }}" class="card-img-top listingImages" alt="{{ listingPage.title }}">
         <h3>${{listingPage.price}}</h3>
         <p>{{listingPage.description}}</p>
-        
 
-        <!--<form class="row g-3" action="{% url 'categorySearch' %}" method="POST">
-            {% csrf_token %}
-            <div class="col-md-4" style="margin-bottom: 2em;">
-                <select id="category" class="form-select" name="category">
-                    <option selected disabled hidden>Select a category</option>
-                    {% for category in categories %}
-                    <option value="{{ category }}">{{ category }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-8">
-                <button type="submit" class="btn btn-primary">SEARCH</button>
-            </div>
-        </form>--> 
+        <br>        
 
         <h3>Details</h3>
         <ul>
@@ -56,11 +80,42 @@
             <li><strong>Category: </strong>{{listingPage.category}}</li>
         </ul>
 
+        
+
+        <hr style="border-width: .15em; border-style: solid;">
+
+        
+        <h3>Bids</h3>
+        <form class="row g-3" action="{% url 'newBid' id=listingPage.id %}" method="POST" style="margin-bottom: 1em;">
+            {% csrf_token %}
+            <div class="col-md-12">
+                <label for="bid" class="form-label">Bid:</label>
+                <input type="number" class="form-control" placeholder="$" aria-label="Bid" step="0.01" name="bid" id="bid" aria-describedby="bidHelp">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">PLACE BID</button>
+            </div>
+        </form>
+        {% if message %}
+            {% if pass %}
+                <div class="alert alert-success" role="alert">
+                    {{message}}
+                </div>
+            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    {{message}}
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <hr style="border-width: .15em; border-style: solid;">
+
         <h3>Comments</h3>
         {% if comments %}
             {% for comment in comments %}
                 <div class="alert alert-dark" role="alert">
-                    <h5><strong>{{comment.author}}</strong></h5>
+                    <h5 style="display: inline;"><strong>{{comment.author}}</strong></h5>
+                    <div style="display: inline;" id="commentHelp" class="form-text"> | {{comment.dateCreated}}</div>
                     <p>{{comment.content}}</p>
                 </div>
             {% endfor %}
@@ -68,18 +123,19 @@
             <p>No comments yet! Be the first one to leave one.</p>
         {% endif %}
 
-        <form class="row" action="{% url 'listingPage' id=listingPage.id %}" method="POST">
+        <form class="row" action="{% url 'newComment' id=listingPage.id %}" method="POST">
             {% csrf_token %}
             <div class="col-12" style="margin-bottom: .8em;">
                 <div class="form-floating">
                     <textarea class="form-control" placeholder="Leave a comment here" id="comments" name="comments" style="height: 110px"></textarea>
-                    <label for="comments">Comments</label>
+                    <label for="comments">Your Comment</label>
                 </div>
             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">PUBLISH</button>
             </div>
         </form>
+
 
     {% else %}
         <h2>{{listingPage.title}}</h2>
